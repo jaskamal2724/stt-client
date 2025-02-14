@@ -39,6 +39,7 @@ const SignIn = () => {
       }
 
       console.log(data)
+      sessionStorage.setItem("username",data.Username)
       const name = data.Username
       navigate(`/dashboard/${name}`)
     } 
