@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React from 'react';
 import {
   Activity,
 } from 'lucide-react';
@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
 
-  console.log(key)
+  
   const navigate=useNavigate()
 
   const handlelogout=async()=>{
