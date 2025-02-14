@@ -9,7 +9,7 @@ const Navbar = () => {
 
   useEffect(() => {
     if (name) {
-      localStorage.setItem("username", name); // Store in localStorage
+      sessionStorage.setItem("username", name); // Store in localStorage
     }
   }, [name]); 
 
@@ -21,7 +21,7 @@ const Navbar = () => {
     });
 
     if(response.status==200){
-      localStorage.removeItem("username")
+      sessionStorage.removeItem("username")
       console.log("signed out")
       navigate("/signin")
     }
