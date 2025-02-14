@@ -13,7 +13,7 @@ function App() {
     if(!storedName){
       navigate("/signin")
     }
-  },[storedName])
+  },[])
   
   return (
     <>
