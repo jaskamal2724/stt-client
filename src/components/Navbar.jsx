@@ -21,6 +21,7 @@ const Navbar = () => {
     });
 
     if(response.status==200){
+      localStorage.removeItem("username")
       console.log("signed out")
       navigate("/signin")
     }
