@@ -9,7 +9,7 @@ import FormData from 'form-data';
 
 const AudioInterface = () => {
   const [isRecording, setIsRecording] = useState(false);
-  const [transcription, setTranscription] = useState('');
+  const [transcription, setTranscription] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [audioLevel, setAudioLevel] = useState(0);
   const [audioURL, setAudioURL] = useState(null);
@@ -101,7 +101,7 @@ const AudioInterface = () => {
 
     const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/upload`,formData,{headers:{"Content-Type":"multipart/form-data"}})
     
-    setTranscription(response.data);
+    setTranscription(response.data.transcription);
     setIsLoading(false);
     
   };

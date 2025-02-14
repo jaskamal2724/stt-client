@@ -7,13 +7,14 @@ import { useCallback, useEffect, useState } from 'react'
 
 function App() {
   const navigate = useNavigate()
-  const storedName = sessionStorage.getItem("username")
+  const [username, setUsername] = useState(sessionStorage.getItem("username"));
+
 
   useEffect(()=>{
-    if(!storedName){
+    if(!username){
       navigate("/signin")
     }
-  },[])
+  },[username, navigate])
   
   return (
     <>

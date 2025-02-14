@@ -5,10 +5,12 @@ import {
 import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
-  
+
+  console.log(key)
   const navigate=useNavigate()
 
   const handlelogout=async()=>{
+    
     const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/signout`, {
       method: 'POST',
     });
