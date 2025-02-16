@@ -1,4 +1,3 @@
-// SignUp.jsx
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
@@ -7,10 +6,14 @@ import { Label } from "./ui/label";
 import { Mail, Lock, User, ArrowRight, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
+// SignUp Component
 const SignUp = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Hook for programmatic navigation
 
+  // State for loading status
   const [isLoading, setIsLoading] = useState(false);
+
+  // State to manage form input fields
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -18,19 +21,20 @@ const SignUp = () => {
     name: ''
   });
 
+  // Function to handle form submission
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
+    e.preventDefault(); // Prevent default form submission behavior
+    setIsLoading(true); // Show loading state
 
+    // Check if password and confirm password match
     if (formData.password !== formData.confirmPassword) {
-      
-      console.log("password does not match")
+      console.log("password does not match");
       setIsLoading(false);
       return;
     }
 
     try {
-
+      // Send signup request to the backend
       const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/signup`, {
         method: 'POST',
         headers: {
@@ -45,23 +49,21 @@ const SignUp = () => {
 
       const data = await response.json();
 
+      // Handle unsuccessful response
       if (!response.ok) {
         throw new Error(data.error || 'Authentication failed');
       }
 
-     
-      console.log("singup success")
-      navigate('/signin');
-    }
-     catch (error) {
-      
-      console.log("signup error",error)
-    } 
-    finally {
-      setIsLoading(false);
+      console.log("signup success");
+      navigate('/signin'); // Redirect user to sign-in page
+    } catch (error) {
+      console.log("signup error", error);
+    } finally {
+      setIsLoading(false); // Hide loading state
     }
   };
 
+  // Function to handle input changes and update state
   const handleChange = (e) => {
     setFormData(prev => ({
       ...prev,
@@ -80,8 +82,11 @@ const SignUp = () => {
             Sign up to get started with our service
           </CardDescription>
         </CardHeader>
+        {/* Signup Form */}
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
+            
+            {/* Name Input */}
             <div className="space-y-2">
               <Label htmlFor="name" className="text-gray-200">Name</Label>
               <div className="relative">
@@ -97,6 +102,7 @@ const SignUp = () => {
               </div>
             </div>
             
+            {/* Email Input */}
             <div className="space-y-2">
               <Label htmlFor="email" className="text-gray-200">Email</Label>
               <div className="relative">
@@ -113,6 +119,7 @@ const SignUp = () => {
               </div>
             </div>
 
+            {/* Password Input */}
             <div className="space-y-2">
               <Label htmlFor="password" className="text-gray-200">Password</Label>
               <div className="relative">
@@ -129,6 +136,7 @@ const SignUp = () => {
               </div>
             </div>
 
+            {/* Confirm Password Input */}
             <div className="space-y-2">
               <Label htmlFor="confirmPassword" className="text-gray-200">Confirm Password</Label>
               <div className="relative">
@@ -146,6 +154,7 @@ const SignUp = () => {
             </div>
           </CardContent>
           
+          {/* Buttons */}
           <CardFooter className="flex flex-col space-y-4">
             <Button 
               type="submit" 
@@ -162,6 +171,7 @@ const SignUp = () => {
               )}
             </Button>
 
+            {/* Redirect to Sign-in */}
             <Button
               type="button"
               variant="ghost"

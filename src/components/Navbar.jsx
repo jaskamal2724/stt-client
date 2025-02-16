@@ -5,23 +5,25 @@ import {
 import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
-  const navigate=useNavigate()
+  const navigate = useNavigate();
 
-  const handlelogout=async()=>{
-    
+  const handleLogout = async () => {
+    // Send a request to the backend to log out the user
     const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/signout`, {
       method: 'POST',
     });
 
-    if(response.status==200){
-      sessionStorage.removeItem("username")
-      console.log("signed out")
-      navigate("/signin")
+    // If logout is successful, remove user data from session storage and navigate to sign-in page
+    if (response.status == 200) {
+      sessionStorage.removeItem("username"); // Remove stored username
+      console.log("Signed out successfully");
+      navigate("/signin"); // Redirect to sign-in page
+    } else {
+      console.log("Could not sign out"); // Log error if logout fails
     }
-    else {
-      console.log("could not sign out")
-    }
-  }
+  };
+
+  
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50">
@@ -41,12 +43,12 @@ const Navbar = () => {
               </span>
 
             </div>
-            {sessionStorage.getItem("username") && 
-            <div>
-              <button onClick={handlelogout}  className="px-4 py-2 text-white font-medium rounded-lg bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:scale-105 transition-all duration-300 shadow-md">
-                Logout
-              </button>
-            </div>
+            {sessionStorage.getItem("username") &&
+              <div>
+                <button onClick={handlelogout} className="px-4 py-2 text-white font-medium rounded-lg bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:scale-105 transition-all duration-300 shadow-md">
+                  Logout
+                </button>
+              </div>
             }
           </div>
         </div>
