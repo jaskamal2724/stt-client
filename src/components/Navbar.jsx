@@ -45,7 +45,7 @@ const Navbar = () => {
             </div>
             {sessionStorage.getItem("username") &&
               <div>
-                <button onClick={handlelogout} className="px-4 py-2 text-white font-medium rounded-lg bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:scale-105 transition-all duration-300 shadow-md">
+                <button onClick={handleLogout} className="px-4 py-2 text-white font-medium rounded-lg bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:scale-105 transition-all duration-300 shadow-md">
                   Logout
                 </button>
               </div>
