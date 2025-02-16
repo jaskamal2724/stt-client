@@ -7,7 +7,7 @@ import axios from 'axios';
 import FormData from 'form-data';
 
 const AudioInterface = () => {
-  // State variables
+  // all states 
   const [isRecording, setIsRecording] = useState(false);
   const [transcription, setTranscription] = useState();
   const [isLoading, setIsLoading] = useState(false);
@@ -16,12 +16,11 @@ const AudioInterface = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [audioName, setAudioName] = useState('');
 
-  // Refs for handling media recording and audio playback
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
   const audioPlayerRef = useRef(null);
 
-  // Effect to simulate audio level changes when recording
+
   useEffect(() => {
     if (isRecording) {
       const interval = setInterval(() => {
@@ -32,7 +31,6 @@ const AudioInterface = () => {
     setAudioLevel(0);
   }, [isRecording]);
 
-  // Function to start recording audio
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -57,7 +55,6 @@ const AudioInterface = () => {
     }
   };
 
-  // Function to stop recording
   const stopRecording = () => {
     if (mediaRecorderRef.current && isRecording) {
       mediaRecorderRef.current.stop();
@@ -66,7 +63,6 @@ const AudioInterface = () => {
     }
   };
 
-  // Function to handle file upload
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -76,22 +72,19 @@ const AudioInterface = () => {
     }
   };
 
-  // Function to send audio file to backend for transcription
   const handleTranscribe = async () => {
     setIsLoading(true);
 
-    // Fetch the audio file from the stored URL
     const res = await fetch(audioURL);
     const audioBlob = await res.blob();
     const audioFile = new File([audioBlob], "audio.wav", { type: "audio/wav" });
 
-    const formData = new FormData();
-    formData.append("audio", audioFile);
+    const formData = new FormData()
+    formData.append("audio", audioFile)
 
-    console.log(audioFile);
+    console.log(audioFile)
 
     try {
-      // Sending the audio file to the backend for transcription
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/upload`,
         formData,
@@ -100,16 +93,16 @@ const AudioInterface = () => {
 
       console.log("API Response:", response.data);
 
-      // Setting the transcribed text received from the backend
+      
       setTranscription(response.data);
     } catch (error) {
       console.error("Error transcribing audio:", error);
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
+
   };
 
-  // Function to toggle play/pause audio
   const togglePlayPause = () => {
     if (audioPlayerRef.current) {
       if (isPlaying) {
@@ -121,63 +114,156 @@ const AudioInterface = () => {
     }
   };
 
-  // Function to handle audio playback completion
   const handleAudioEnded = () => {
     setIsPlaying(false);
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 p-6">
-      <div className="pt-40 px-6 pb-6">
-        <Card className="max-w-2xl mx-auto bg-gray-900/50 border-gray-700">
-          <CardHeader>
-            <CardTitle className="text-2xl font-bold text-white text-center">
-              Audio Transcription
-            </CardTitle>
-          </CardHeader>
+    <>
+      <div>
+        <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 p-6">
+          <div className="pt-40 px-6 pb-6">
+            <Card className="max-w-2xl mx-auto bg-gray-900/50 border-gray-700">
 
-          <CardContent className="space-y-6">
-            <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
-              {/* Upload Audio Button */}
-              <Button onClick={() => document.getElementById('audio-upload').click()}>Upload Audio</Button>
-              <input type="file" accept="audio/*" onChange={handleFileUpload} className="hidden" id="audio-upload" />
-
-              {/* Start/Stop Recording Button */}
-              <Button onClick={isRecording ? stopRecording : startRecording}>
-                {isRecording ? 'Stop Recording' : 'Start Recording'}
-              </Button>
-            </div>
-
-            {/* Show Progress Bar when Recording */}
-            {isRecording && <Progress value={audioLevel} className="h-2 bg-gray-700" />}
-
-            {/* Show Audio Player if Audio is Available */}
-            {audioURL && (
-              <Card>
-                <CardContent>
-                  <div className="flex items-center">
-                    <Button onClick={togglePlayPause}>{isPlaying ? <Pause /> : <Play />}</Button>
-                    <p>{audioName}</p>
-                    <Button onClick={handleTranscribe} disabled={isLoading}>Transcribe</Button>
-                  </div>
-                  <audio ref={audioPlayerRef} src={audioURL} onEnded={handleAudioEnded} className="hidden" />
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Display Transcription Result */}
-            <Card>
               <CardHeader>
-                <CardTitle>Transcription</CardTitle>
+                <CardTitle className="text-2xl font-bold text-white text-center">
+                  Audio Transcription
+                </CardTitle>
               </CardHeader>
-              <CardContent>
-                {isLoading ? <Loader /> : transcription ? <p>{transcription}</p> : <p>No transcription available</p>}
+
+              <CardContent className="space-y-6">
+
+                <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
+
+                  <div className="relative">
+                    <input
+                      type="file"
+                      accept="audio/*"
+                      onChange={handleFileUpload}
+                      className="hidden"
+                      id="audio-upload"
+                    />
+                    <Button
+                      variant="outline"
+                      className="w-full sm:w-auto relative overflow-hidden group border-gray-600 hover:border-gray-500"
+                      onClick={() => document.getElementById('audio-upload').click()}
+                    >
+                      <div className="absolute inset-0 w-3 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 transition-all duration-300 ease-out group-hover:w-full opacity-10" />
+                      <Upload className="mr-2 h-4 w-4" />
+                      Upload Audio
+                    </Button>
+                  </div>
+
+
+                  <Button
+                    variant={isRecording ? "destructive" : "outline"}
+                    onClick={isRecording ? stopRecording : startRecording}
+                    className="relative overflow-hidden group border-gray-600 hover:border-gray-500"
+                  >
+                    <div className="absolute inset-0 w-3 bg-gradient-to-r from-red-500 via-red-400 to-red-500 transition-all duration-300 ease-out group-hover:w-full opacity-10" />
+                    {isRecording ? (
+                      <>
+                        <Square className="mr-2 h-4 w-4" />
+                        Stop Recording
+                      </>
+                    ) : (
+                      <>
+                        <Mic className="mr-2 h-4 w-4" />
+                        Start Recording
+                      </>
+                    )}
+                  </Button>
+                </div>
+
+
+                {isRecording && (
+                  <div className="py-4">
+                    <Progress value={audioLevel} className="h-2 bg-gray-700" />
+                    <div className="flex justify-between mt-4 space-x-1">
+                      {[...Array(8)].map((_, i) => (
+                        <div
+                          key={i}
+                          className="flex-1 "
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+
+                {audioURL && (
+                  <Card className="bg-gray-800/50 border-gray-700">
+                    <CardContent className="py-4">
+                      <div className="flex items-center space-x-4">
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          className="h-8 w-8"
+                          onClick={togglePlayPause}
+                        >
+                          {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+                        </Button>
+                        <div className="flex-1">
+                          <p className="text-sm text-gray-400">{audioName}</p>
+                        </div>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={handleTranscribe}
+                          disabled={isLoading}
+                        >
+                          Transcribe
+                        </Button>
+                      </div>
+                      <audio
+                        ref={audioPlayerRef}
+                        src={audioURL}
+                        onEnded={handleAudioEnded}
+                        className="hidden"
+                      />
+                    </CardContent>
+                  </Card>
+                )}
+
+
+                <Card className="bg-gray-800/50 border-gray-700">
+                  <CardHeader>
+                    <CardTitle className="text-lg font-semibold text-white flex items-center">
+                      <Activity className="mr-2 h-5 w-5 text-indigo-400" />
+                      Transcription
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="min-h-[200px] rounded-lg">
+                      {isLoading ? (
+                        <div className="flex items-center justify-center h-full">
+                          <div className="relative">
+                            <div className="h-24 w-24 rounded-full border-t-2 border-b-2 border-indigo-500 animate-spin" />
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              <Loader className="h-8 w-8 text-indigo-500" />
+                            </div>
+                          </div>
+                        </div>
+                      ) : transcription ? (
+                        <p className="text-gray-300 leading-relaxed">{transcription}</p>
+                      ) : (
+                        <div className="flex flex-col items-center justify-center h-full text-gray-400 space-y-4">
+                          <Mic className="h-12 w-12 text-gray-500" />
+                          <p className="text-center">
+                            Upload an audio file or start recording to see transcription
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+
               </CardContent>
             </Card>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
